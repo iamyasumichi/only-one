@@ -1,6 +1,6 @@
 // Main Application
 import { initFirebase, subscribeToMemos, createMemo, updateMemo, deleteMemo, onSyncStateChange, SyncState } from './firebase-sync.js';
-import { initOutliner, loadMemo, addItem, getItems, searchInMemo } from './outliner.js';
+import { initOutliner, loadMemo, addItem, getItems, searchInMemo, indentCurrentItem, outdentCurrentItem } from './outliner.js';
 
 // ===== State =====
 let memos = [];
@@ -21,6 +21,8 @@ const addMemoBtn = document.getElementById('add-memo-btn');
 const backBtn = document.getElementById('back-btn');
 const deleteMemoBtn = document.getElementById('delete-memo-btn');
 const addItemBtn = document.getElementById('add-item-btn');
+const indentBtn = document.getElementById('indent-btn');
+const outdentBtn = document.getElementById('outdent-btn');
 
 // Modal
 const newMemoModal = document.getElementById('new-memo-modal');
@@ -73,6 +75,10 @@ function setupEventListeners() {
 
     // アイテム追加ボタン
     addItemBtn.addEventListener('click', addItem);
+
+    // インデント操作
+    if (indentBtn) indentBtn.addEventListener('click', indentCurrentItem);
+    if (outdentBtn) outdentBtn.addEventListener('click', outdentCurrentItem);
 
     // 検索
     globalSearch.addEventListener('input', (e) => {

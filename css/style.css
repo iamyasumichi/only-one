@@ -163,40 +163,71 @@ body {
     background: var(--border);
 }
 
-/* ===== FAB (Floating Action Button) ===== */
-.fab {
+/* ===== Action Bar (Mobile) ===== */
+.action-bar {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #000;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 50;
+    /* キーボード表示時にも見えるように */
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+
+.action-btn {
+    background: transparent;
     border: none;
-    cursor: pointer;
+    color: var(--text-primary);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 20px var(--shadow);
+    cursor: pointer;
     transition: all var(--transition);
-    z-index: 50;
 }
 
-.fab:hover {
-    background: var(--accent-hover);
-    transform: scale(1.05);
-}
-
-.fab:active {
+.action-btn:active {
+    background: var(--bg-tertiary);
     transform: scale(0.95);
 }
 
-.fab-small {
-    width: 48px;
-    height: 48px;
-    bottom: 20px;
-    right: 20px;
+.action-btn-primary {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.action-btn-primary:active {
+    background: var(--accent-hover);
+}
+
+/* FABはリストビューのみ表示 */
+#list-view .fab {
+    display: flex;
+}
+
+#editor-view .outliner {
+    padding-bottom: 80px;
+    /* アクションバーの分空ける */
+}
+
+/* デスクトップ調整 */
+@media (min-width: 768px) {
+    .action-bar {
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: var(--radius) var(--radius) 0 0;
+        border: 1px solid var(--border);
+        border-bottom: none;
+    }
 }
 
 /* ===== Search ===== */

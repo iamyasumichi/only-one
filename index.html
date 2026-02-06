@@ -75,12 +75,25 @@
 
         <div id="outliner" class="outliner"></div>
 
-        <button id="add-item-btn" class="fab fab-small">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-        </button>
+        <!-- モバイルアクションバー -->
+        <div class="action-bar">
+            <button id="outdent-btn" class="action-btn" title="階層を上げる">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+            </button>
+            <button id="add-item-btn" class="action-btn action-btn-primary" title="項目を追加">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+            </button>
+            <button id="indent-btn" class="action-btn" title="階層を下げる">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6" />
+                </svg>
+            </button>
+        </div>
     </div>
 
     <!-- Firebase SDK -->

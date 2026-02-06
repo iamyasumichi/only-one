@@ -297,3 +297,27 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+// カーソル位置のアイテムを取得
+function getFocusedItemId() {
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return null;
+
+    const node = sel.anchorNode;
+    const el = node.nodeType === 3 ? node.parentElement : node;
+
+    if (el.classList.contains('item-content')) {
+        return el.dataset.id;
+    }
+    return null;
+}
+
+// 外部からの操作用
+export function indentCurrentItem() {
+    const id = getFocusedItemId();
+    if (id) indentItem(id);
+}
+
+export function outdentCurrentItem() {
+    const id = getFocusedItemId();
+    if (id) outdentItem(id);
+}
