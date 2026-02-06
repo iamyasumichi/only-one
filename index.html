@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Only One</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icons/icon-192.svg">
+    <link rel="apple-touch-icon" href="icons/icon-192.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- トップ画面 -->
+    <div id="list-view" class="view active">
+        <header class="header">
+            <h1 class="logo">Only One</h1>
+            <button id="sync-status" class="sync-btn" title="同期状態">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                    <path d="M21 3v5h-5" />
+                </svg>
+            </button>
+        </header>
+
+        <div class="search-container">
+            <input type="text" id="global-search" class="search-input" placeholder="メモを検索...">
+        </div>
+
+        <div id="memo-list" class="memo-list"></div>
+
+        <button id="add-memo-btn" class="fab">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- 新規メモ作成モーダル -->
+    <div id="new-memo-modal" class="modal">
+        <div class="modal-content">
+            <h2>新規メモ</h2>
+            <input type="text" id="new-memo-title" class="modal-input" placeholder="タイトルを入力...">
+            <div class="modal-actions">
+                <button id="cancel-new-memo" class="btn btn-secondary">キャンセル</button>
+                <button id="create-memo" class="btn btn-primary">作成</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- エディタ画面 -->
+    <div id="editor-view" class="view">
+        <header class="header editor-header">
+            <button id="back-btn" class="icon-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <input type="text" id="memo-title" class="title-input" placeholder="タイトル">
+            <button id="delete-memo-btn" class="icon-btn delete-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                </svg>
+            </button>
+        </header>
+
+        <div class="editor-search-container">
+            <input type="text" id="editor-search" class="search-input" placeholder="このメモ内を検索...">
+        </div>
+
+        <div id="outliner" class="outliner"></div>
+
+        <button id="add-item-btn" class="fab fab-small">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, onValue, set, push, remove, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Firebase設定をグローバルに公開
+        window.firebaseModules = { initializeApp, getDatabase, ref, onValue, set, push, remove, update, getAuth, signInAnonymously, onAuthStateChanged };
+    </script>
+    <script src="js/firebase-sync.js" type="module"></script>
+    <script src="js/outliner.js" type="module"></script>
+    <script src="js/app.js" type="module"></script>
+    <script>
+        // Service Worker登録
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
