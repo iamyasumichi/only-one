@@ -5,12 +5,17 @@ let onChangeCallback = null;
 let searchQuery = '';
 
 // アウトライナー初期化
+// アウトライナー初期化
 export function initOutliner(containerId, onChange) {
     onChangeCallback = onChange;
     const container = document.getElementById(containerId);
     container.addEventListener('keydown', handleKeyDown);
     container.addEventListener('input', handleInput);
     container.addEventListener('click', handleClick);
+    // フォーカス追跡を追加 (capturing phaseで確実に補足)
+    container.addEventListener('focus', trackFocus, true);
+    // タッチデバイスでのフォーカス喪失防止
+    container.addEventListener('touchstart', trackFocus, { passive: true });
 }
 
 // メモをロード
@@ -297,27 +302,47 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-// カーソル位置のアイテムを取得
-function getFocusedItemId() {
-    const sel = window.getSelection();
-    if (!sel.rangeCount) return null;
+// カーソル位置の追跡
+let lastFocusedItemId = null;
 
-    const node = sel.anchorNode;
-    const el = node.nodeType === 3 ? node.parentElement : node;
-
-    if (el.classList.contains('item-content')) {
-        return el.dataset.id;
+// フォーカス追跡（initOutliner内で呼ぶ）
+function trackFocus(e) {
+    if (e.target.classList.contains('item-content')) {
+        lastFocusedItemId = e.target.dataset.id;
     }
-    return null;
+}
+
+// カーソル位置のアイテムを取得（フォーカス外れてても最後の位置を使う）
+function getFocusedItemId() {
+    // 1. 現在の選択範囲を確認
+    const sel = window.getSelection();
+    if (sel.rangeCount) {
+        let node = sel.anchorNode;
+        const el = node.nodeType === 3 ? node.parentElement : node;
+        if (el && el.classList.contains('item-content')) {
+            lastFocusedItemId = el.dataset.id;
+            return el.dataset.id;
+        }
+    }
+
+    // 2. 選択範囲がなければ最後のフォーカス位置を使用
+    return lastFocusedItemId;
 }
 
 // 外部からの操作用
 export function indentCurrentItem() {
     const id = getFocusedItemId();
-    if (id) indentItem(id);
+    if (id) {
+        indentItem(id);
+        // フォーカス維持
+        setTimeout(() => focusItem(id), 0);
+    }
 }
 
 export function outdentCurrentItem() {
     const id = getFocusedItemId();
-    if (id) outdentItem(id);
+    if (id) {
+        outdentItem(id);
+        setTimeout(() => focusItem(id), 0);
+    }
 }

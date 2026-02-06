@@ -76,9 +76,21 @@ function setupEventListeners() {
     // アイテム追加ボタン
     addItemBtn.addEventListener('click', addItem);
 
-    // インデント操作
-    if (indentBtn) indentBtn.addEventListener('click', indentCurrentItem);
-    if (outdentBtn) outdentBtn.addEventListener('click', outdentCurrentItem);
+    // インデント操作 (フォーカスを奪わないようにmousedown/touchstartで処理)
+    const handleAction = (e, action) => {
+        e.preventDefault(); // フォーカス移動を防ぐ
+        action();
+    };
+
+    if (indentBtn) {
+        indentBtn.addEventListener('mousedown', (e) => handleAction(e, indentCurrentItem));
+        indentBtn.addEventListener('touchstart', (e) => handleAction(e, indentCurrentItem));
+    }
+
+    if (outdentBtn) {
+        outdentBtn.addEventListener('mousedown', (e) => handleAction(e, outdentCurrentItem));
+        outdentBtn.addEventListener('touchstart', (e) => handleAction(e, outdentCurrentItem));
+    }
 
     // 検索
     globalSearch.addEventListener('input', (e) => {
