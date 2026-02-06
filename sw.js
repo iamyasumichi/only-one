@@ -1,5 +1,5 @@
 // Service Worker for Only One PWA
-const CACHE_NAME = 'onlyone-v1';
+const CACHE_NAME = 'onlyone-v2';
 const ASSETS = [
     './',
     './index.html',
