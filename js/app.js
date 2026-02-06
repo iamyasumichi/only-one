@@ -180,16 +180,21 @@ async function handleCreateMemo() {
 
     const memo = await createMemo(title);
     if (memo) {
-        openMemo(memo.id);
+        openMemo(memo);  // メモオブジェクトを直接渡す
     }
 }
 
 // ===== Editor =====
-function openMemo(id) {
-    const memo = memos.find(m => m.id === id);
+function openMemo(idOrMemo) {
+    let memo;
+    if (typeof idOrMemo === 'string') {
+        memo = memos.find(m => m.id === idOrMemo);
+    } else {
+        memo = idOrMemo;
+    }
     if (!memo) return;
 
-    currentMemoId = id;
+    currentMemoId = memo.id;
     memoTitle.value = memo.title;
     editorSearch.value = '';
 
